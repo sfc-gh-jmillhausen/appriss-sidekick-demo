@@ -66,6 +66,18 @@ export async function deleteConversation(id: string) {
   await fetch(`/api/conversations/${id}`, { method: "DELETE" }).catch(() => undefined);
 }
 
+/** Wipe every conversation locally and on the proxy, so the Sidekick demo starts clean on each load. */
+export function resetAll() {
+  timers.forEach(clearTimeout);
+  timers.clear();
+  commit({ list: [], activeId: null });
+  const del = (id: string) => fetch(`/api/conversations/${id}`, { method: "DELETE" }).catch(() => undefined);
+  fetch("/api/conversations")
+    .then((r) => (r.ok ? (r.json() as Promise<Array<{ id: string }>>) : []))
+    .then((metas) => metas.forEach((m) => del(m.id)))
+    .catch(() => undefined);
+}
+
 function scheduleSave(id: string) {
   clearTimeout(timers.get(id));
   timers.set(

@@ -53,7 +53,13 @@ function AppGrid() {
 function TopBar({ children }: { children?: ReactNode }) {
   return (
     <header className="ap-top">
-      <button className="ap-grid" aria-label="Apps" data-testid="portal-apps">
+      <button
+        className="ap-grid"
+        aria-label="Show or hide Sidekick"
+        title="Show or hide Sidekick"
+        data-testid="portal-apps"
+        onClick={() => window.dispatchEvent(new Event("sidekick:toggle"))}
+      >
         <AppGrid />
       </button>
       <Link to="/" className="ap-logo" data-testid="portal-home" aria-label="Appriss Retail portal home">

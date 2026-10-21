@@ -7,8 +7,13 @@ session loop and client-side browser tools as ACME Assist; new code is in `src/s
 
 ```bash
 npm install
-npm run dev            # http://localhost:5173  (.env: VITE_BRAND=appriss, DEMO_MODE=true)
+cp .env.example .env   # already set to VITE_BRAND=appriss, DEMO_MODE=true
+npm run dev            # http://localhost:5173
 ```
+
+Every page load (including a hard refresh) wipes chat history so the demo starts from the greeting.
+Show or hide the panel with the X in its header, the "Sidekick" launcher (bottom left), or the purple
+button at the top left of the portal.
 
 `DEMO_MODE=true` runs a scripted agent that emits the real Agent API event stream (thinking,
 Cortex Analyst / Search tool calls with SQL, client-side browser tools, approval prompts), so no

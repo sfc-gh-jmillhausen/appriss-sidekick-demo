@@ -211,7 +211,7 @@ export function segments(text: string): Array<{ md: string } | { kind: string; b
 
 // ------------------------------------------------------------------ Analysis Results view
 
-export function AnalysisView({ a, onBack, onContinue }: { a: Analysis; onBack: () => void; onContinue: () => void }) {
+export function AnalysisView({ a, onBack, onContinue, onClose }: { a: Analysis; onBack: () => void; onContinue: () => void; onClose?: () => void }) {
   return (
     <div className="sk-analysis" data-testid="sk-analysis-view">
       <div className="sk-analysis-head">
@@ -220,6 +220,11 @@ export function AnalysisView({ a, onBack, onContinue }: { a: Analysis; onBack: (
         </button>
         <Sparkle size={18} />
         <span className="sk-analysis-name">Sidekick Analysis Results</span>
+        {onClose && (
+          <button className="sk-icon-btn sk-analysis-close" aria-label="Close Sidekick" onClick={onClose} data-testid="sk-analysis-close">
+            <Icon name="x" />
+          </button>
+        )}
       </div>
       <div className="sk-analysis-body">
         <div className="sk-an-title">

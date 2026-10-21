@@ -206,6 +206,8 @@
 .sk-lib-hint { font-size: 12px; color: #2846a8; }
 
 /* launcher (panel closed) + agent cursor */
+.sk-shell.collapsed .sk-panel { display: none; }
+.sk-analysis-close { margin-left: auto; }
 .sk-launcher { position: fixed; left: 18px; bottom: 18px; display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--sk-line); border-radius: 999px; padding: 10px 16px; font-weight: 700; color: var(--sk-navy); box-shadow: 0 8px 24px rgba(30, 42, 90, .2); cursor: pointer; z-index: 10; }
 .sk-agent-cursor { position: absolute; top: 64px; right: 18px; z-index: 6; display: flex; align-items: center; gap: 6px; background: var(--sk-navy); color: #fff; padding: 5px 10px; border-radius: 999px; font-size: 12px; box-shadow: 0 6px 18px rgba(30, 42, 90, .25); animation: sk-fade 2.6s ease forwards; }
 @keyframes sk-fade { 0%, 80% { opacity: 1; } 100% { opacity: 0; } }

@@ -8,13 +8,19 @@ import { getBrand } from "../brand/brand.config";
 import { applyTheme } from "../brand/theme";
 import { browserHost, useBrowser } from "../browser/host";
 import { emptyAssistant, isBusy, resumeConversation, sendTurn, stopTurn } from "../chat/session";
-import { createConversation, deleteConversation, setActive, updateConversation, useStore } from "../chat/store";
+import { createConversation, deleteConversation, resetAll, setActive, updateConversation, useStore } from "../chat/store";
 import type { UIMessage } from "../chat/types";
 import { friendlyLabel, SidekickMessage } from "./SidekickMessage";
 import { AnalysisView, Icon, SidekickCtx, Sparkle } from "./widgets";
 import "./sidekick.css";
 
 const InlinePortal = lazy(() => import("../apps/portal/PortalApp").then((m) => ({ default: m.InlinePortal })));
+
+/** Fired by the portal's top-left button to show/hide the Sidekick panel. */
+export const TOGGLE_EVENT = "sidekick:toggle";
+
+// Every page load (including a hard refresh) starts the demo from the greeting with no history.
+resetAll();
 
 type Tab = "chat" | "inbox" | "aops";
 const greeting = () => {
@@ -252,6 +258,11 @@ export default function SidekickApp() {
     fetch("/api/config").then((r) => (r.ok ? r.json() : null)).then(setCfg).catch(() => undefined);
   }, [brand]);
   useEffect(() => {
+    const toggle = () => setCollapsed((c) => !c);
+    window.addEventListener(TOGGLE_EVENT, toggle);
+    return () => window.removeEventListener(TOGGLE_EVENT, toggle);
+  }, []);
+  useEffect(() => {
     if (activeId) void resumeConversation(activeId);
   }, [activeId]);
   useEffect(() => {
@@ -284,10 +295,10 @@ export default function SidekickApp() {
   return (
     <SidekickCtx.Provider value={api}>
       <div className={`sk-shell ${collapsed ? "collapsed" : ""}`}>
-        {!collapsed && (
-          <aside className="sk-panel" aria-label="Sidekick">
+        <aside className="sk-panel" aria-label="Sidekick" aria-hidden={collapsed} data-testid="sk-panel">
             {analysis ? (
               <AnalysisView
+                onClose={() => setCollapsed(true)}
                 a={analysis}
                 onBack={() => setAnalysis(null)}
                 onContinue={() => {
@@ -363,7 +374,6 @@ export default function SidekickApp() {
               </>
             )}
           </aside>
-        )}
         <PortalPane />
         {collapsed && (
           <button className="sk-launcher" onClick={() => setCollapsed(false)} data-testid="sk-open">
