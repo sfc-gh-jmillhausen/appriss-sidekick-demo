@@ -1,7 +1,7 @@
 // Sidekick rich blocks. The agent emits fenced ```sidekick-<kind> JSON blocks in its Markdown
 // (server/demo.ts, or a live agent following the Appriss guidance in src/agent/tools/browser.ts)
 // and the panel renders them as the cards from the Sidekick design.
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useId, type ReactNode } from "react";
 import type { Analysis, Priority, WeeklyBar } from "../../shared/appriss/data";
 
 export interface SidekickApi {
@@ -15,16 +15,18 @@ export const useSidekick = () => useContext(SidekickCtx);
 // ------------------------------------------------------------------ icons
 
 export function Sparkle({ size = 18, className = "" }: { size?: number; className?: string }) {
+  // Per-instance gradient id: a shared id resolves to the first <svg> in the DOM, which may be hidden.
+  const id = `skg${useId().replace(/:/g, "")}`;
   return (
     <svg viewBox="0 0 64 64" width={size} height={size} className={`sk-sparkle ${className}`} aria-hidden>
       <defs>
-        <linearGradient id="skg" x1="0" y1="1" x2="1" y2="0">
+        <linearGradient id={id} x1="0" y1="1" x2="1" y2="0">
           <stop offset="0" stopColor="#E5487F" />
           <stop offset="1" stopColor="#7B5CF0" />
         </linearGradient>
       </defs>
-      <path fill="url(#skg)" d="M30 6 C32 22 38 28 54 30 C38 32 32 38 30 54 C28 38 22 32 6 30 C22 28 28 22 30 6 Z" />
-      <path fill="url(#skg)" d="M50 4 L52 10 L58 12 L52 14 L50 20 L48 14 L42 12 L48 10 Z" />
+      <path fill={`url(#${id})`} d="M30 6 C32 22 38 28 54 30 C38 32 32 38 30 54 C28 38 22 32 6 30 C22 28 28 22 30 6 Z" />
+      <path fill={`url(#${id})`} d="M50 4 L52 10 L58 12 L52 14 L50 20 L48 14 L42 12 L48 10 Z" />
     </svg>
   );
 }
